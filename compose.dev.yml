@@ -1,10 +1,10 @@
 version: "3.8"
 
 services:
-  app:
+  app_laravel:
     build:
       context: ./laravel-docker
-      dockerfile: Dockerfile
+      dockerfile: ./docker/workspace/Dockerfile
       target: development
     image: laravel-docker:latest
     restart: unless-stopped
@@ -12,7 +12,7 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./laravel-docker:/app
+      - ./laravel-docker:/var/www
     environment:
       - APP_ENV=${APP_ENV:-local}
       - APP_DEBUG=${APP_DEBUG:-true}
