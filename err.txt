@@ -1,0 +1,157 @@
+ laravel-docker  docker exec -it laravel_app sh                                                                           
+# ls -la /var/run/php
+total 16
+drwxr-xr-x 1 www-data www-data 4096 Jul 26 12:25 .
+drwxr-xr-x 1 root     root     4096 Jul 26 12:25 ..
+-rw-r--r-- 1 root     root        2 Jul 26 12:25 php-fpm.pid
+# ps aux | grep php-fpm
+sh: 2: ps: not found
+# php-fpm -t -y /usr/local/etc/php-fpm.conf
+[26-Jul-2025 12:34:00] NOTICE: configuration file /usr/local/etc/php-fpm.conf test is successful
+
+# cat /var/log/php-fpm.log
+cat: /var/log/php-fpm.log: No such file or directory
+# cat /var/log/supervisor/php-fpm.err.log
+[26-Jul-2025 12:25:36] NOTICE: fpm is running, pid 46
+[26-Jul-2025 12:25:36] NOTICE: ready to handle connections
+# cat /usr/local/etc/php-fpm.conf
+[global]
+pid = /var/run/php/php-fpm.pid
+error_log = /var/log/php-fpm.log
+include=/usr/local/etc/php-fpm.d/*.conf
+# cat /usr/local/etc/php-fpm.d/www.conf
+[www]
+user = www-data
+group = www-data
+listen.owner = www-data
+listen.group = www-data
+listen = /var/run/php/php-fpm.sock
+listen.mode = 0666
+
+pm = dynamic
+pm.max_children = 5
+pm.start_servers = 2
+pm.min_spare_servers = 1
+pm.max_spare_servers = 3
+
+catch_workers_output = yes# find /usr/local/etc/ -name "*.conf" -type f
+/usr/local/etc/php-fpm.d/www.conf
+/usr/local/etc/php-fpm.d/docker.conf
+/usr/local/etc/php-fpm.d/zz-docker.conf
+/usr/local/etc/php-fpm.conf
+/usr/local/etc/pear.conf
+# ls -la /usr/local/etc/php-fpm.d/
+total 44
+drwxr-xr-x 1 root root  4096 Jul 26 12:17 .
+drwxr-xr-x 1 root root  4096 Jul 26 12:17 ..
+-rw-r--r-- 1 root root   428 Jul 22 01:25 docker.conf
+-rwxr-xr-x 1 root root   287 Jul 26 12:10 www.conf
+-rw-r--r-- 1 root root 22096 Jul 22 01:24 www.conf.default
+-rw-r--r-- 1 root root    45 Jul 22 01:25 zz-docker.conf
+# php-fpm -tt
+[26-Jul-2025 12:53:25] NOTICE: [global]
+[26-Jul-2025 12:53:25] NOTICE:  pid = /var/run/php/php-fpm.pid
+[26-Jul-2025 12:53:25] NOTICE:  error_log = /proc/self/fd/2
+[26-Jul-2025 12:53:25] NOTICE:  syslog.ident = php-fpm
+[26-Jul-2025 12:53:25] NOTICE:  syslog.facility = 24
+[26-Jul-2025 12:53:25] NOTICE:  log_buffering = yes
+[26-Jul-2025 12:53:25] NOTICE:  log_level = unknown value
+[26-Jul-2025 12:53:25] NOTICE:  log_limit = 8192
+[26-Jul-2025 12:53:25] NOTICE:  emergency_restart_interval = 0s
+[26-Jul-2025 12:53:25] NOTICE:  emergency_restart_threshold = 0
+[26-Jul-2025 12:53:25] NOTICE:  process_control_timeout = 0s
+[26-Jul-2025 12:53:25] NOTICE:  process.max = 0
+[26-Jul-2025 12:53:25] NOTICE:  process.priority = undefined
+[26-Jul-2025 12:53:25] NOTICE:  daemonize = no
+[26-Jul-2025 12:53:25] NOTICE:  rlimit_files = 0
+[26-Jul-2025 12:53:25] NOTICE:  rlimit_core = 0
+[26-Jul-2025 12:53:25] NOTICE:  events.mechanism = epoll
+[26-Jul-2025 12:53:25] NOTICE:
+[26-Jul-2025 12:53:25] NOTICE: [www]
+[26-Jul-2025 12:53:25] NOTICE:  prefix = undefined
+[26-Jul-2025 12:53:25] NOTICE:  user = www-data
+[26-Jul-2025 12:53:25] NOTICE:  group = www-data
+[26-Jul-2025 12:53:25] NOTICE:  listen = 9000
+[26-Jul-2025 12:53:25] NOTICE:  listen.backlog = -1
+[26-Jul-2025 12:53:25] NOTICE:  listen.owner = www-data
+[26-Jul-2025 12:53:25] NOTICE:  listen.group = www-data
+[26-Jul-2025 12:53:25] NOTICE:  listen.mode = 0666
+[26-Jul-2025 12:53:25] NOTICE:  listen.allowed_clients = undefined
+[26-Jul-2025 12:53:25] NOTICE:  process.priority = undefined
+[26-Jul-2025 12:53:25] NOTICE:  process.dumpable = no
+[26-Jul-2025 12:53:25] NOTICE:  pm = dynamic
+[26-Jul-2025 12:53:25] NOTICE:  pm.max_children = 5
+[26-Jul-2025 12:53:25] NOTICE:  pm.start_servers = 2
+[26-Jul-2025 12:53:25] NOTICE:  pm.min_spare_servers = 1
+[26-Jul-2025 12:53:25] NOTICE:  pm.max_spare_servers = 3
+[26-Jul-2025 12:53:25] NOTICE:  pm.max_spawn_rate = 32
+[26-Jul-2025 12:53:25] NOTICE:  pm.process_idle_timeout = 10
+[26-Jul-2025 12:53:25] NOTICE:  pm.max_requests = 0
+[26-Jul-2025 12:53:25] NOTICE:  pm.status_path = undefined
+[26-Jul-2025 12:53:25] NOTICE:  pm.status_listen = undefined
+[26-Jul-2025 12:53:25] NOTICE:  ping.path = undefined
+[26-Jul-2025 12:53:25] NOTICE:  ping.response = undefined
+[26-Jul-2025 12:53:25] NOTICE:  access.log = /proc/self/fd/2
+[26-Jul-2025 12:53:25] NOTICE:  access.format = %R - %u %t "%m %r" %s
+[26-Jul-2025 12:53:25] NOTICE:  slowlog = undefined
+[26-Jul-2025 12:53:25] NOTICE:  request_slowlog_timeout = 0s
+[26-Jul-2025 12:53:25] NOTICE:  request_slowlog_trace_depth = 20
+[26-Jul-2025 12:53:25] NOTICE:  request_terminate_timeout = 0s
+[26-Jul-2025 12:53:25] NOTICE:  request_terminate_timeout_track_finished = no
+[26-Jul-2025 12:53:25] NOTICE:  rlimit_files = 0
+[26-Jul-2025 12:53:25] NOTICE:  rlimit_core = 0
+[26-Jul-2025 12:53:25] NOTICE:  chroot = undefined
+[26-Jul-2025 12:53:25] NOTICE:  chdir = undefined
+[26-Jul-2025 12:53:25] NOTICE:  catch_workers_output = yes
+[26-Jul-2025 12:53:25] NOTICE:  decorate_workers_output = no
+[26-Jul-2025 12:53:25] NOTICE:  clear_env = no
+[26-Jul-2025 12:53:25] NOTICE:  security.limit_extensions = .php .phar
+[26-Jul-2025 12:53:25] NOTICE:
+[26-Jul-2025 12:53:25] NOTICE: configuration file /usr/local/etc/php-fpm.conf test is successful
+
+# ls -la /usr/local/etc/php-fpm.d/
+total 44
+drwxr-xr-x 1 root root  4096 Jul 26 12:17 .
+drwxr-xr-x 1 root root  4096 Jul 26 12:17 ..
+-rw-r--r-- 1 root root   428 Jul 22 01:25 docker.conf
+-rwxr-xr-x 1 root root   287 Jul 26 12:10 www.conf
+-rw-r--r-- 1 root root 22096 Jul 22 01:24 www.conf.default
+-rw-r--r-- 1 root root    45 Jul 22 01:25 zz-docker.conf
+# cat /usr/local/etc/php-fpm.d/www.conf | grep listn
+# cat /usr/local/etc/php-fpm.d/www.conf | grep listen
+listen.owner = www-data
+listen.group = www-data
+listen = /var/run/php/php-fpm.sock
+listen.mode = 0666
+# cat /usr/local/etc/php-fpm.d/www.conf.default | grep listen
+; - 'listen' (unixsocket)
+;   'ip.add.re.ss:port'    - to listen on a TCP socket to a specific IPv4 address on
+;   '[ip:6:addr:ess]:port' - to listen on a TCP socket to a specific IPv6 address on
+;   'port'                 - to listen on a TCP socket to all addresses
+;   '/path/to/unix/socket' - to listen on a unix socket.
+listen = 127.0.0.1:9000
+; Set listen(2) backlog.
+;listen.backlog = 511
+;listen.owner = www-data
+;listen.group = www-data
+;listen.mode = 0660
+; When set, listen.owner and listen.group are ignored
+;listen.acl_users =
+;listen.acl_groups =
+; PHP FCGI (5.2.2+). Makes sense only with a tcp listening socket. Each address
+;listen.allowed_clients = 127.0.0.1
+;listen.setfib = 1
+;   listen queue         - the number of request in the queue of pending
+;                          connections (see backlog in listen(2));
+;   max listen queue     - the maximum number of requests in the queue
+;   listen queue len     - the size of the socket queue of pending connections;
+;   listen queue:         0
+;   max listen queue:     1
+;   listen queue len:     42
+;   'ip.add.re.ss:port'    - to listen on a TCP socket to a specific IPv4 address on
+;   '[ip:6:addr:ess]:port' - to listen on a TCP socket to a specific IPv6 address on
+;   'port'                 - to listen on a TCP socket to all addresses
+;   '/path/to/unix/socket' - to listen on a unix socket.
+; Default Value: value of the listen option
+;pm.status_listen = 127.0.0.1:9001
+#
